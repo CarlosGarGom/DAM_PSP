@@ -8,13 +8,13 @@ def mostrar_procesos():
     print("-" * 60)
 
     # Iterar sobre todos los procesos activos
-    for proceso in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_info']):
+    for proceso in psutil.process_iter():
         try:
             # Obtenemos los datos del proceso
-            pid = proceso.info['pid']
-            nombre = proceso.info['name']
-            cpu_uso = proceso.info['cpu_percent']
-            memoria_uso = proceso.info['memory_info'].rss / (1024 * 1024)  # Convertir a MB
+            pid = proceso.pid
+            nombre = proceso.name
+            cpu_uso = proceso.cpu_percent(interval=0.5) # intervalo para que la cpu mida el consumo
+            memoria_uso = proceso.memory_info().rss / (1024 * 1024)  # Convertir a MB
 
             # Imprimir la información del proceso, ajustando % y MB
             print(f"{pid:<10} {nombre:<25} {cpu_uso:>7.2f} % {memoria_uso:>10.2f} MB")
