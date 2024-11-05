@@ -1,9 +1,9 @@
 import threading
 import time
 # se ejecuta de forma intercalada de no ser por el lock
-# lock = threading.Lock()
+lock = threading.Lock()
 def imprimir_numeros():
-    #with lock:
+    with lock:
         for i in range(1,6):
 
             print(f"{threading.current_thread().name} - {i}")
