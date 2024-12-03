@@ -43,10 +43,10 @@ def corredor4():
             cond.notify_all()
 
 
-t1=threading.Thread(target=corredor1())
-t2=threading.Thread(target=corredor2())
-t3=threading.Thread(target=corredor3())
-t4=threading.Thread(target=corredor4())
+t1=threading.Thread(target=corredor1)
+t2=threading.Thread(target=corredor2)
+t3=threading.Thread(target=corredor3)
+t4=threading.Thread(target=corredor4)
 
 t1.start()
 t2.start()
