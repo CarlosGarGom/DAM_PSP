@@ -6,11 +6,12 @@
 # jsonify: Permite convertir datos en formato JSON.
 # request: Permite acceder a los datos enviados en las solicitudes HTTP (como POST o PUT).
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 # **Inicialización de la aplicación Flask**
 # Creamos una instancia de Flask que será nuestra aplicación web.
 app = Flask(__name__)
-
+CORS(app)
 # **Base de datos simulada**
 # Usamos una lista como una "base de datos" en memoria para almacenar información de usuarios.
 # Cada usuario es representado como un diccionario con las claves 'id', 'nombre' y 'edad'.
@@ -59,14 +60,19 @@ def obtener_usuario_por_id(usuario_id):
 # **Endpoint para crear un nuevo usuario (POST)**
 @app.route('/api/usuarios', methods=['POST'])
 def crear_usuario():
+    # TODO Actualizar como se generan los ids, que recoja el id mas alto y le sume 1
     """
     Este endpoint permite agregar un nuevo usuario a la base de datos simulada.
     El cliente debe enviar un JSON con los datos del nuevo usuario ('nombre' y 'edad').
     """
+    if usuarios:
+        nuevo_id = max(usuario["id"] for usuario in usuarios) + 1
+    else:
+        nuevo_id = 1  # Si la lista está vacía, asignamos el ID 1.
     # Obtenemos los datos enviados en la solicitud.
     datos = request.get_json()
     nuevo_usuario = {
-        "id": len(usuarios) + 1,  # Generamos un nuevo ID basado en el tamaño de la lista.
+        "id": nuevo_id,  # Generamos un nuevo ID basado en el tamaño de la lista.
         "nombre": datos["nombre"],  # Nombre del usuario.
         "edad": datos["edad"]  # Edad del usuario.
     }
@@ -95,6 +101,7 @@ def actualizar_usuario(usuario_id):
 # **Endpoint para eliminar un usuario (DELETE)**
 @app.route('/api/usuarios/<int:usuario_id>', methods=['DELETE'])
 def eliminar_usuario(usuario_id):
+    # TODO Si no se encuentra el ID COMUNICARLO
     """
     Este endpoint permite eliminar un usuario específico por su ID.
     """
@@ -102,6 +109,18 @@ def eliminar_usuario(usuario_id):
     # Filtramos la lista de usuarios para eliminar el que coincide con el ID.
     usuarios = [u for u in usuarios if u["id"] != usuario_id]
     return jsonify({"mensaje": "Usuario eliminado"}), 200  # Confirmamos la eliminación.
+
+# **Endpoint para eliminar usuarios (DELETE)**
+@app.route('/api/usuarios', methods=['DELETE'])
+def eliminar_usuarios():
+
+    """
+    Este endpoint permite eliminar todos los usuarios
+    """
+    global usuarios  # Indicamos que vamos a modificar la lista global.
+
+    usuarios.clear()
+    return jsonify({"mensaje": "Usuarios eliminados"}), 200  # Confirmamos la eliminación.
 
 # **Ejecución de la aplicación**
 if __name__ == '__main__':
