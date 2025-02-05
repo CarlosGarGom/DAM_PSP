@@ -1,0 +1,2 @@
+2025-02-03 13:11:40.225071 - Conexión desde 127.0.0.1:50342 - Archivo: archivo.txt
+2025-02-03 15:27:39.157283 - Conexión desde 127.0.0.1:51376 - Archivo: archivo.txt
